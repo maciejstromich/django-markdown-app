@@ -3,7 +3,7 @@ import markdown as markdown_module
 
 from django import VERSION
 from django.template import loader
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 
 from . import settings
