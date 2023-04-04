@@ -35,7 +35,7 @@ def markdown(value, extensions=settings.MARKDOWN_EXTENSIONS,
 
     """
     return mark_safe(markdown_module.markdown(
-        force_text(value), extensions=extensions,
+        force_str(value), extensions=extensions,
         extension_configs=extension_configs, safe_mode=safe))
 
 
