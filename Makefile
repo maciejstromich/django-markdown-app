@@ -73,28 +73,27 @@ docs:
 #  Development
 # =============
 
-
-$(VIRTUALENV): requirements.txt
-	[ -d $(VIRTUALENV) ] || virtualenv -p `which python3` $(VIRTUALENV)
-	@$(VIRTUALENV)/bin/pip install --use-feature=2020-resolver -r requirements.txt
-	touch $(VIRTUALENV)
-
-$(VIRTUALENV)/bin/py.test: requirements-tests.txt $(VIRTUALENV)
-	@$(VIRTUALENV)/bin/pip install --use-feature=2020-resolver -r requirements-tests.txt
-	touch $(VIRTUALENV)/bin/py.test
-
-.PHONY: t
-# target: t - Runs tests
-t: clean $(VIRTUALENV)/bin/py.test
-	@$(VIRTUALENV)/bin/py.test
-
-$(CURDIR)/example/db.sqlite3: $(VIRTUALENV)
-	$(VIRTUALENV)/bin/python example/manage.py migrate --noinput
-
-.PHONY: run
-run: $(CURDIR)/example/db.sqlite3
-	$(VIRTUALENV)/bin/python example/manage.py runserver
+.PHONY: build
+# target: build - Build the Docker image
+build:
+	docker compose build
 
 .PHONY: shell
-shell: $(CURDIR)/example/db.sqlite3
-	$(VIRTUALENV)/bin/python example/manage.py shell
+# target: shell - Open a bash shell in the container
+shell:
+	docker compose run --rm dev
+
+.PHONY: test
+# target: test - Run tox tests in Docker
+test:
+	docker compose run --rm dev tox
+
+.PHONY: lint
+# target: lint - Run ruff linter in Docker
+lint:
+	docker compose run --rm dev ruff check $(MODULE)
+
+.PHONY: format
+# target: format - Run ruff formatter in Docker
+format:
+	docker compose run --rm dev ruff format $(MODULE)

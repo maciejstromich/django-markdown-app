@@ -1,4 +1,4 @@
-""" Support markdown by Django Flatpages admin. """
+"""Support markdown by Django Flatpages admin."""
 
 from django import forms
 from django.contrib import admin
@@ -9,21 +9,19 @@ from django_markdown.widgets import AdminMarkdownWidget
 
 
 class LocalFlatPageForm(FlatpageForm):
-
-    """ Markdown support. """
+    """Markdown support."""
 
     content = forms.CharField(widget=AdminMarkdownWidget)
 
 
 class LocalFlatPageAdmin(FlatPageAdmin):
-
-    """ Markdown support. """
+    """Markdown support."""
 
     form = LocalFlatPageForm
 
 
 def register():
-    """ Register markdown for flatpages. """
+    """Register markdown for flatpages."""
 
     admin.site.unregister(FlatPage)
     admin.site.register(FlatPage, LocalFlatPageAdmin)

@@ -1,5 +1,5 @@
 -e .
 
-pytest==3.6
-pytest-django==3.6
+pytest
+pytest-django
 ipdb

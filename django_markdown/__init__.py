@@ -1,4 +1,4 @@
-""" Django-Markdown supports markdown in Django. """
+"""Django-Markdown supports markdown in Django."""
 
 __version__ = "0.9.7"
 __project__ = "django-markdown-app"

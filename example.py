@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-# coding: utf-8
 import os
 
 from django.core.management import call_command
-from django.conf.urls import patterns, include
+from django.urls import include, path
 from django.conf import settings
 from django.http import HttpResponse
 
@@ -14,19 +13,27 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", MODULE)
 
 # Settings
 # --------
-DEBUG=True,
-ROOT_URLCONF=MODULE
-SECRET_KEY='secret'
-INSTALLED_APPS = (
+DEBUG = True
+ROOT_URLCONF = MODULE
+SECRET_KEY = 'secret'
+INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.auth',
     'django.contrib.admin',
-)
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.messages.context_processors.messages',
-    'django.contrib.auth.context_processors.auth',
-)
+]
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.messages.context_processors.messages',
+                'django.contrib.auth.context_processors.auth',
+            ],
+        },
+    },
+]
 
 if not settings.configured:
     settings.configure(**locals())
@@ -54,12 +61,10 @@ def home(request):
 # Urls
 # ----
 from django.contrib import admin
-admin.autodiscover()
-urlpatterns = patterns(
-    '',
-    ('^$', home),
-    ('^admin/', include(admin.site.urls)),
-)
+urlpatterns = [
+    path('', home),
+    path('admin/', admin.site.urls),
+]
 
 
 if __name__ == '__main__':

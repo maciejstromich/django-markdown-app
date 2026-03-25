@@ -28,7 +28,7 @@ _license = re.search(r'^__license__\s*=\s*"(.*)"', _meta, re.M).group(1)
 _project = re.search(r'^__project__\s*=\s*"(.*)"', _meta, re.M).group(1)
 _version = re.search(r'^__version__\s*=\s*"(.*)"', _meta, re.M).group(1)
 
-download_url = "https://github.com/sv0/django-markdown-app/archive/%s.tar.gz" \
+download_url = "https://github.com/maciejstromich/django-markdown-app/archive/%s.tar.gz" \
                % _version
 
 install_requires = [l for l in _read('requirements.txt').split('\n')
@@ -43,21 +43,23 @@ setup(
 
     author="Kirill Klenov",
     author_email="horneds@gmail.com",
-    maintainer="Slavik Svyrydiuk",
-    maintainer_email="slavik@svyrydiuk.eu",
-    url="https://github.com/sv0/django-markdown-app",
+    maintainer="Maciej Strömich",
+    maintainer_email="xxx@xxx.com",
+    url="https://github.com/maciejstromich/django-markdown-app",
     download_url=download_url,
 
     keywords='html markdown django',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
-        'Framework :: Django :: 2.0',
+        'Framework :: Django :: 5.2',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',  # noqa
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
         'Topic :: Software Development :: Code Generators',
         'Topic :: Text Processing :: Markup',
     ],

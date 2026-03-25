@@ -1,4 +1,5 @@
-""" Widgets for django-markdown. """
+"""Widgets for django-markdown."""
+
 import os
 
 from django import forms
@@ -10,8 +11,7 @@ from .utils import editor_js_initialization
 
 
 class MarkdownWidget(forms.Textarea):
-
-    """ Widget for a textarea.
+    """Widget for a textarea.
 
     Takes two additional optional keyword arguments:
 
@@ -27,37 +27,42 @@ class MarkdownWidget(forms.Textarea):
         super(MarkdownWidget, self).__init__(attrs)
 
     def render(self, name, value, attrs=None, renderer=None):
-        """ Render widget.
+        """Render widget.
 
         :returns: A rendered HTML
 
         """
         html = super(MarkdownWidget, self).render(name, value, attrs, renderer)
         attrs = self.build_attrs(attrs)
-        html += editor_js_initialization("#%s" % attrs['id'])
+        html += editor_js_initialization("#%s" % attrs["id"])
         return mark_safe(html)
 
     class Media:
         css = {
-            'screen': (
-                os.path.join('django_markdown', 'skins',
-                             settings.MARKDOWN_EDITOR_SKIN, 'style.css'),
-                os.path.join(settings.MARKDOWN_SET_PATH,
-                             settings.MARKDOWN_SET_NAME, 'style.css')
+            "screen": (
+                os.path.join(
+                    "django_markdown",
+                    "skins",
+                    settings.MARKDOWN_EDITOR_SKIN,
+                    "style.css",
+                ),
+                os.path.join(
+                    settings.MARKDOWN_SET_PATH, settings.MARKDOWN_SET_NAME, "style.css"
+                ),
             )
         }
 
         js = (
-            os.path.join('django_markdown', 'jquery.init.js'),
-            os.path.join('django_markdown', 'jquery.markitup.js'),
-            os.path.join(settings.MARKDOWN_SET_PATH,
-                         settings.MARKDOWN_SET_NAME, 'set.js'),
-            os.path.join('django_markdown', 'editor.js')
+            os.path.join("django_markdown", "jquery.init.js"),
+            os.path.join("django_markdown", "jquery.markitup.js"),
+            os.path.join(
+                settings.MARKDOWN_SET_PATH, settings.MARKDOWN_SET_NAME, "set.js"
+            ),
+            os.path.join("django_markdown", "editor.js"),
         )
 
 
 class AdminMarkdownWidget(MarkdownWidget, AdminTextareaWidget):
-
-    """ Support markdown widget in Django Admin. """
+    """Support markdown widget in Django Admin."""
 
     pass
