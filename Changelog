@@ -1,3 +1,13 @@
+2026-03-25  maciejstromich
+	* Require Django 5.2, Python 3.11+
+	* Replace deprecated Markdown safe_mode with nh3 HTML sanitizer
+	* Remove Markdown version cap (now >=3.4)
+	* Remove legacy Python 2 and Django 1.x/2.x compatibility shims
+	* Replace Travis CI and CircleCI with GitHub Actions
+	* Replace flake8 with ruff
+	* Add Dockerfile and docker-compose for local development
+	* Version 0.10.0
+
 2021-05-27  haard
 	* Support Django 2.2
 	* Modified ModelAdmins to include declaration of jQuery dependencies.

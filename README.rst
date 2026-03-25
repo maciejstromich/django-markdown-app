@@ -1,5 +1,5 @@
-Django-Markdown v. 0.9.7
-========================
+Django-Markdown v. 0.10.0
+=========================
 
 .. _description:
 
@@ -9,12 +9,8 @@ Documentaton available at readthedocs_ or github_.
 
 .. _badges:
 
-.. image:: https://circleci.com/gh/sv0/django-markdown-app.svg?style=svg
-    :target: https://circleci.com/gh/sv0/django-markdown-app
-
-.. image:: https://coveralls.io/repos/github/sv0/django-markdown-app/badge.svg?branch=master
-    :target: https://coveralls.io/github/sv0/django-markdown-app?branch=master
-    :alt: Coverals
+.. image:: https://github.com/maciejstromich/django-markdown-app/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/maciejstromich/django-markdown-app/actions/workflows/tests.yml
 
 .. image:: http://img.shields.io/pypi/v/django-markdown-app.svg?style=flat-square
     :target: https://pypi.python.org/pypi/django-markdown-app
@@ -31,8 +27,10 @@ Documentaton available at readthedocs_ or github_.
 Requirements
 ============
 
-- django >= 2.0, <3.0
-- markdown >= 2.6.11
+- Python >= 3.11
+- Django >= 5.2
+- Markdown >= 3.4
+- nh3 >= 0.2.14
 
 
 .. _installation:
@@ -48,14 +46,15 @@ Installation
 Version compatibility
 =====================
 
-==============  ===================
-Django version  django-markdown-app
-==============  ===================
-2.0 - 2.2       0.9.7
-2.0 - 2.1       0.9.6
-1.8 or later    0.9.3.1
-prior to 1.8    0.8.5.1
-==============  ===================
+==============  ================  ===================
+Django version  Python version    django-markdown-app
+==============  ================  ===================
+5.2             3.11 - 3.14       0.10.0
+2.0 - 2.2      3.6 - 3.7         0.9.7
+2.0 - 2.1      3.6 - 3.7         0.9.6
+1.8 or later    2.7, 3.x         0.9.3.1
+prior to 1.8    2.7               0.8.5.1
+==============  ================  ===================
 
 
 Setup
@@ -65,7 +64,7 @@ Setup
 
 - Add 'django_markdown' to INSTALLED_APPS ::
 
-    INSTALLED_APPS += ( 'django_markdown', )
+    INSTALLED_APPS += [ 'django_markdown', ]
 
 
 - Add django_markdown urls to base urls ::
@@ -116,10 +115,8 @@ Use django_markdown
     # in your project main urls
     from django_markdown import flatpages
     ...
-    # Django admin
-    admin.autodiscover()
     flatpages.register()
-    urlpatterns += [ path(r'admin/', admin.site.urls), ]
+    urlpatterns += [ path('admin/', admin.site.urls), ]
 
 
 #) Template tags: ::
@@ -162,11 +159,16 @@ Example: `settings.py` ::
 **MARKDOWN_PROTECT_PREVIEW** - protect preview url for staff only
 
 
-Examples
-========
+Development
+===========
 
-Execute **make run** in sources directory. Open http://127.0.0.1:8000 in your
-browser. For admin access use 'root:root' credentials.
+A Docker-based development environment is provided::
+
+    make build    # build the Docker image
+    make shell    # open a bash shell in the container
+    make test     # run tox tests
+    make lint     # run ruff linter
+    make format   # run ruff formatter
 
 
 Changes
@@ -180,15 +182,15 @@ Bug tracker
 
 If you have any suggestions, bug reports or
 annoyances please report them to the issue tracker
-at https://github.com/sv0/django-markdown-app/issues
+at https://github.com/maciejstromich/django-markdown-app/issues
 
 
 Contributing
 ============
 
-Development of django-markdown happens at github: https://github.com/sv0/django-markdown-app
+Development of django-markdown happens at github: https://github.com/maciejstromich/django-markdown-app
 
-All changes should include tests, pass flake8_ and pass build on the TravisCI_
+All changes should include tests and pass ruff_ linting.
 
 
 Contributors
@@ -220,11 +222,10 @@ Markitup_:
 .. _GNU lesser general public license: https://www.gnu.org/copyleft/lesser.html
 .. _readthedocs: https://django-markdown-app.readthedocs.io
 .. _Markitup: https://markitup.jaysalvat.com
-.. _github: https://github.com/sv0/django-markdown-app
+.. _github: https://github.com/maciejstromich/django-markdown-app
 .. _klen: https://github.com/klen
 .. _yavorskiy: https://github.com/yavorskiy
 .. _markdown: https://python-markdown.github.io
 .. _changes: https://django-markdown-app.readthedocs.io/en/latest/changes.html
-.. _TravisCI: https://travis-ci.org/sv0/django-markdown-app
-.. _flake8: https://pypi.org/project/flake8
+.. _ruff: https://github.com/astral-sh/ruff
 .. _contributors: CONTRIBUTORS.rst
