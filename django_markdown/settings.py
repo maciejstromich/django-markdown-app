@@ -24,6 +24,6 @@ MARKDOWN_PREVIEW_TEMPLATE = getattr(
 
 MARKDOWN_STYLE = getattr(settings, "MARKDOWN_STYLE", "django_markdown/preview.css")
 
-MARKDOWN_PROTECT_PREVIEW = getattr(settings, "MARKDOWN_PROTECT_PREVIEW", False)
+MARKDOWN_PROTECT_PREVIEW = getattr(settings, "MARKDOWN_PROTECT_PREVIEW", True)
 
 LOGIN_URL = settings.LOGIN_URL

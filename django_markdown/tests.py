@@ -31,14 +31,29 @@ class DjangoMarkdownUtilsTest(TestCase):
 
         self.assertEqual(html, expected)
 
+    def test_xss_sanitized_by_default(self):
+        html = markdown_util('<script>alert("xss")</script>')
+        self.assertNotIn("<script>", html)
+
+    def test_xss_unsafe_allows_scripts(self):
+        html = markdown_util('<script>alert("xss")</script>', sanitize=False)
+        self.assertIn("<script>", html)
+
 
 class DjangoMarkdownViewsTest(TestCase):
     def setUp(self):
-
         self.data = {"data": "# header \n *test*"}
+        from django_markdown import settings
+
+        self._orig_protect = settings.MARKDOWN_PROTECT_PREVIEW
+        settings.MARKDOWN_PROTECT_PREVIEW = False
+
+    def tearDown(self):
+        from django_markdown import settings
+
+        settings.MARKDOWN_PROTECT_PREVIEW = self._orig_protect
 
     def test_preview_get_empty_request(self):
-
         response = self.client.get("/markdown/preview/")
 
         self.assertEqual(response.status_code, 200)
@@ -46,33 +61,26 @@ class DjangoMarkdownViewsTest(TestCase):
         self.assertContains(response, "preview.css")
 
     def test_preview_get_markdown_request(self):
-
         response = self.client.post("/markdown/preview/", data=self.data)
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<h1>header</h1>")
 
     def test_preview_post_markdown_request(self):
-
         response = self.client.post("/markdown/preview/", data=self.data)
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<h1>header</h1>")
 
     def test_preview_MARKDOWN_PROTECT_PREVIEW(self):
-        # monkey patching
-        from . import settings
+        from django_markdown import settings
 
         settings.MARKDOWN_PROTECT_PREVIEW = True
 
         response = self.client.post("/markdown/preview/", data=self.data)
         self.assertEqual(response.status_code, 302)
 
-        # for tests isolation reasons
-        settings.MARKDOWN_PROTECT_PREVIEW = False
-
     def test_preview_get_markdown_for_admin_user_registered(self):
-
         username = "test"
         password = ("test",)
 
@@ -85,6 +93,13 @@ class DjangoMarkdownViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<h1>header</h1>")
 
+    def test_preview_xss_sanitized(self):
+        data = {"data": '<script>alert("xss")</script>'}
+        response = self.client.post("/markdown/preview/", data=data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "<script>")
+
 
 class DjangoMarkdownWidgetTest(TestCase):
     def test_markdown_widget(self):
@@ -96,4 +111,5 @@ class DjangoMarkdownWidgetTest(TestCase):
         template = Template("{% load django_markdown %}<html>{{ form }}</html>")
         html = template.render(Context({"form": form}))
 
-        self.assertIn('"previewParserPath": "/markdown/preview/"', html)
+        self.assertIn("previewParserPath", html)
+        self.assertIn("/markdown/preview/", html)

@@ -15,9 +15,11 @@ register = template.Library()
 
 @register.filter(is_safe=True)
 def markdown(value, arg=None):
-    """Render markdown over a given value, optionally using varios extensions.
+    """Render markdown over a given value, optionally using various extensions.
 
-    Default extensions could be defined which MARKDOWN_EXTENSIONS option.
+    HTML output is sanitized with nh3 by default.
+
+    Default extensions could be defined with MARKDOWN_EXTENSIONS option.
 
     Syntax: ::
 
@@ -29,23 +31,25 @@ def markdown(value, arg=None):
 
     """
     extensions = (arg and arg.split(",")) or settings.MARKDOWN_EXTENSIONS
-    return _markdown(value, extensions=extensions, safe=False)
+    return _markdown(value, extensions=extensions)
 
 
 @register.filter(is_safe=True)
 def markdown_safe(value, arg=None):
-    """Render markdown over a given value, optionally using varios extensions.
+    """Alias for the markdown filter. Kept for backwards compatibility."""
+    extensions = (arg and arg.split(",")) or settings.MARKDOWN_EXTENSIONS
+    return _markdown(value, extensions=extensions)
 
-    Default extensions could be defined which MARKDOWN_EXTENSIONS option.
 
-    Enables safe mode, which strips raw HTML and only returns HTML generated
-    by markdown.
+@register.filter(is_safe=True)
+def markdown_unsafe(value, arg=None):
+    """Render markdown without HTML sanitization. Only use for trusted content.
 
-    :returns: A rendered markdown.
+    :returns: A rendered markdown
 
     """
     extensions = (arg and arg.split(",")) or settings.MARKDOWN_EXTENSIONS
-    return _markdown(value, extensions=extensions, safe=True)
+    return _markdown(value, extensions=extensions, sanitize=False)
 
 
 @register.inclusion_tag("django_markdown/editor_init.html")
@@ -55,12 +59,11 @@ def markdown_editor(selector):
     :returns: Editor template context.
 
     """
-    return dict(
-        selector=selector,
-        extra_settings=mark_safe(
-            json.dumps(dict(previewParserPath=reverse("django_markdown_preview")))
-        ),
-    )
+    config = {
+        "selector": selector,
+        "extra_settings": {"previewParserPath": reverse("django_markdown_preview")},
+    }
+    return dict(config_json=mark_safe(json.dumps(config)))
 
 
 @register.inclusion_tag("django_markdown/media_all.html")

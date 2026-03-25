@@ -12,23 +12,30 @@ from django.utils.safestring import mark_safe
 from . import settings
 
 
+MAX_MARKDOWN_LENGTH = 256 * 1024  # 256 KB
+
+
 def markdown(
     value,
     extensions=settings.MARKDOWN_EXTENSIONS,
     extension_configs=settings.MARKDOWN_EXTENSION_CONFIGS,
-    safe=False,
+    sanitize=True,
 ):
-    """Render markdown over a given value, optionally using varios extensions.
+    """Render markdown over a given value, optionally using various extensions.
 
-    Default extensions could be defined which MARKDOWN_EXTENSIONS option.
+    Default extensions could be defined with MARKDOWN_EXTENSIONS option.
+
+    HTML output is sanitized with nh3 by default. Pass sanitize=False only
+    for trusted content.
 
     :returns: A rendered markdown
 
     """
+    text = force_str(value)[:MAX_MARKDOWN_LENGTH]
     html = markdown_module.markdown(
-        force_str(value), extensions=extensions, extension_configs=extension_configs
+        text, extensions=extensions, extension_configs=extension_configs
     )
-    if safe:
+    if sanitize:
         html = nh3.clean(html)
     return mark_safe(html)
 
@@ -43,5 +50,6 @@ def editor_js_initialization(selector, **extra_settings):
         **settings.MARKDOWN_EDITOR_SETTINGS,
     )
     options.update(extra_settings)
-    ctx = dict(selector=selector, extra_settings=json.dumps(options))
+    config = {"selector": selector, "extra_settings": options}
+    ctx = dict(config_json=mark_safe(json.dumps(config)))
     return init_template.render(ctx)
